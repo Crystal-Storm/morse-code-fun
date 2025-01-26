@@ -49,14 +49,15 @@ def add_spaces(push_string,wait_string):
         offset += size
     return return_list
 
-# def write_data(filename,data):
-#     with open(filename) as file:
-#         for data_point in data:
-#             file.write(str(data_point)+'\n')
+def write_data(filename,data):
+    with open(filename,'w') as file:
+        writing_data=[str(x) for x in data]
+        file.write('\n'.join(writing_data))
 
-# def saved_data(filename = None):
-
-#     return data
+def read_data(filename,type):
+    with open(filename,'r') as file:
+        string=file.read()
+    return [type(x) for x in string.split('\n')]
 
 def to_string(morse_letter_list):
     return_string = ""
@@ -73,8 +74,8 @@ def times_to_morse_string(all_times):
     return morse_string
 
 def main():
-    times = get_user_input()
-    # times = saved_data()
+    # times = get_user_input()
+    times = read_data("hello.txt",float)
 
     final_result = times_to_morse_string(times)
 
