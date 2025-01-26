@@ -3,7 +3,7 @@ import time
 from pynput import keyboard
 
 SKILL_LEVEL_PUSH = {'m':(.1,.3)}
-SKILL_LEVEL_WAIT = {'m':(.1,.5)}
+SKILL_LEVEL_WAIT = {'m':(.1,.3)}
 CONVERSION_TABLE = {'.-':'a','-...':'b', '-.-.':'c', '-..':'d', '.':'e', '..-.':'f', '--.':'g', '....':'h', '..':'i', '.---':'j', '-.-':'k', '.-..':'l', '---':'o', '.--.':'p', '--.-':'q', '.-.':'r', '...':'s', '-':'t', '..-':'u', '...-':'v', '.--':'w', '-..-':'x', '-.--':'y', '--..':'z'}
 
 def get_user_input():
@@ -14,9 +14,7 @@ def get_user_input():
             on_press = add_time,
             on_release = add_time) as listener:
         listener.join()
-    all_pushes = all_times[1::2]
-    all_waits = all_times[2::2]
-    return all_pushes,all_waits
+    return all_times
 
 def add_time(key):
     if key == keyboard.Key.space:
@@ -51,10 +49,14 @@ def add_spaces(push_string,wait_string):
         offset += size
     return return_list
 
-def saved_data(filename = None):
-    a = [0.07637715339660645, 0.07677507400512695, 0.07373428344726562, 0.11157822608947754, 0.07674241065979004, 0.07574653625488281, 0.41417884826660156, 0.11369895935058594, 0.07774066925048828, 0.07730817794799805, 0.3753635883331299, 0.11162710189819336, 0.11475610733032227, 0.3768496513366699, 0.37727952003479004, 0.3405294418334961]
-    b = [0.09169340133666992, 0.09370136260986328, 0.1146693229675293, 0.6291744709014893, 0.9479961395263672, 0.1066441535949707, 0.17540597915649414, 0.06577539443969727, 0.5222854614257812, 0.11561298370361328, 0.1534864902496338, 0.07375001907348633, 0.7855353355407715, 0.06804227828979492, 0.07477712631225586]
-    return a,b
+# def write_data(filename,data):
+#     with open(filename) as file:
+#         for data_point in data:
+#             file.write(str(data_point)+'\n')
+
+# def saved_data(filename = None):
+
+#     return data
 
 def to_string(morse_letter_list):
     return_string = ""
@@ -62,20 +64,24 @@ def to_string(morse_letter_list):
         return_string += CONVERSION_TABLE[letter]
     return return_string
 
-def main():
-    # all_pushes,all_waits = get_user_input()
-    all_pushes,all_waits = saved_data()
-    
-    # print(all_pushes)
+def times_to_morse_string(all_times):
+    all_pushes = all_times[1::2]
+    all_waits = all_times[2::2]
     push_string = translate_times(all_pushes,SKILL_LEVEL_PUSH['m'])
-    # print(push_string)
-    # print(all_waits)
     wait_string = translate_times(all_waits,SKILL_LEVEL_WAIT['m'])
-    # print(wait_string)
+    morse_string = add_spaces(push_string,wait_string)
+    return morse_string
 
-    final_result = add_spaces(push_string,wait_string)
+def main():
+    times = get_user_input()
+    # times = saved_data()
+
+    final_result = times_to_morse_string(times)
+
     print(final_result)
+
     letters = to_string(final_result)
+
     print(letters)
 
 if __name__ == "__main__":
